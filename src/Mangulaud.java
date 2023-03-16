@@ -8,7 +8,6 @@ public class Mangulaud {
 
 	public static Nupp[][] looManglaud(){
 		Nupp[][] laud = new Nupp[8][8];
-
 		return laud;
 	}
 }
