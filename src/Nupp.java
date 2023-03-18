@@ -29,6 +29,21 @@ public class Nupp {
 		return varv;
 	}
 
+	public int getAsukohtx() {
+		return asukohtx;
+	}
+
+	public int getAsukohty() {
+		return asukohty;
+	}
+
+	public void setAsukohtx(int asukohtx) {
+		this.asukohtx = asukohtx;
+	}
+
+	public void setAsukohty(int asukohty) {
+		this.asukohty = asukohty;
+	}
 
 	public void setEnPassant(int kaiguNr) {
 		this.enPassant = kaiguNr;

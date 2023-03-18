@@ -24,8 +24,6 @@ public class KaiguKontroll {
 		return true;
 	}
 
-
-
 	public static boolean risti(){
 		return true;
 	}
