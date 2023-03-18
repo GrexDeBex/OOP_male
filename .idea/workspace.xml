@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Lisasin peameetodi">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mangija.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangija.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mangulaud.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangulaud.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Nupp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nupp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
