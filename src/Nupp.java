@@ -6,13 +6,13 @@
 
 public class Nupp {
 	final private String nimi;			// Nupu nimetus
-	final private String varv;			// Millise mängija nupp
+	final private char varv;			// Millise mängija nupp
 	private int asukohtx;
 	private int asukohty;
 	private int enPassant;				// Kui ettur liigub kaks ruutu salvetatakse käigu number, et kontrollida enpassanti
 	private boolean kasLiikunud;		// Default false, kui ettur, kuningas või vanker liigub esimest korda, siis muutub true-ks
 
-	public Nupp(String nimi, String varv, int asukohtx, int asukohty) {
+	public Nupp(String nimi, char varv, int asukohtx, int asukohty) {
 		this.nimi = nimi;
 		this.varv = varv;
 		this.enPassant = 0;
@@ -25,7 +25,7 @@ public class Nupp {
 		return nimi;
 	}
 
-	public String getVarv() {
+	public char getVarv() {
 		return varv;
 	}
 
