@@ -10,6 +10,10 @@ public class Mangija {
 		return varv;
 	}
 
+	public Nupp[] getNupud() {
+		return nupud;
+	}
+
 	public void setVarv(char varv) {
 		this.varv = varv;
 	}

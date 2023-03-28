@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Lisasin peameetodi">
+      <change afterPath="$PROJECT_DIR$/Tasklist.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KaiguKontroll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KaiguKontroll.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Mangija.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangija.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Mangulaud.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangulaud.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Nupp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nupp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
     </list>
@@ -32,6 +32,14 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -100,6 +108,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />

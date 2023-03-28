@@ -7,15 +7,15 @@
 public class Nupp {
 	final private String nimi;			// Nupu nimetus
 	final private char varv;			// Millise mängija nupp
-	private int asukohtx;
 	private int asukohty;
-	private int enPassant;				// Kui ettur liigub kaks ruutu salvetatakse käigu number, et kontrollida enpassanti
+	private int asukohtx;
+	private boolean enPassant;				// Kui ettur liigub kaks ruutu salvetatakse käigu number, et kontrollida enpassanti
 	private boolean kasLiikunud;		// Default false, kui ettur, kuningas või vanker liigub esimest korda, siis muutub true-ks
 
 	public Nupp(String nimi, char varv, int asukohtx, int asukohty) {
 		this.nimi = nimi;
 		this.varv = varv;
-		this.enPassant = 0;
+		this.enPassant = true;
 		this.kasLiikunud = false;
 		this.asukohtx = asukohtx;
 		this.asukohty = asukohty;
@@ -37,6 +37,10 @@ public class Nupp {
 		return asukohty;
 	}
 
+	public boolean isEnPassant() {
+		return enPassant;
+	}
+
 	public void setAsukohtx(int asukohtx) {
 		this.asukohtx = asukohtx;
 	}
@@ -45,8 +49,8 @@ public class Nupp {
 		this.asukohty = asukohty;
 	}
 
-	public void setEnPassant(int kaiguNr) {
-		this.enPassant = kaiguNr;
+	public void setEnPassant(boolean väärtus) {
+		this.enPassant = väärtus;
 	}
 
 	public void setLiikunud() {
