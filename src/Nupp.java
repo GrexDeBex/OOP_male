@@ -1,28 +1,33 @@
 /**
- * Loob nupu objekti
- *
- * */
+ * Nupu klass
+ * <p>
+ * Klassis omastatakse igale nupule vajalikud omadused
+ */
 
 
 public class Nupp {
-	final private String nimi;			// Nupu nimetus
-	final private char varv;			// Millise mängija nupp
-	private int asukohty;
-	private int asukohtx;
-	private boolean enPassant;				// Kui ettur liigub kaks ruutu
-	private boolean kasLiikunud;		// Default false, kui ettur, kuningas või vanker liigub esimest korda, siis muutub true-ks
+	private String nimi;                    // Nuppu eristav nimetus
+	final private char varv;                // Määrab nupu värvi
+	private int asukohty;                    // Nupu veerg
+	private int asukohtx;                    // Nupu rida
+	private boolean enPassant;                // Määrab, kas on võimalik seda nuppu rünnata en passantiga
+	private boolean kasPoleLiikunud;        // Määrab, kas nupp on oma algpositsioonilt liikunud
 
 	public Nupp(String nimi, char varv, int asukohtx, int asukohty) {
 		this.nimi = nimi;
 		this.varv = varv;
 		this.enPassant = false;
-		this.kasLiikunud = false;
+		this.kasPoleLiikunud = true;
 		this.asukohtx = asukohtx;
 		this.asukohty = asukohty;
 	}
 
 	public String getNimi() {
 		return nimi;
+	}
+
+	public void setNimi(String nimi) {
+		this.nimi = nimi;
 	}
 
 	public char getVarv() {
@@ -33,31 +38,31 @@ public class Nupp {
 		return asukohtx;
 	}
 
-	public int getAsukohty() {
-		return asukohty;
-	}
-
-	public boolean isEnPassant() {
-		return enPassant;
-	}
-
 	public void setAsukohtx(int asukohtx) {
 		this.asukohtx = asukohtx;
+	}
+
+	public int getAsukohty() {
+		return asukohty;
 	}
 
 	public void setAsukohty(int asukohty) {
 		this.asukohty = asukohty;
 	}
 
+	public boolean isEnPassant() {
+		return enPassant;
+	}
+
 	public void setEnPassant(boolean väärtus) {
 		this.enPassant = väärtus;
 	}
 
-	public boolean getKasLiikunud() {
-		return this.kasLiikunud;
+	public boolean kasPoleLiikunud() {
+		return this.kasPoleLiikunud;
 	}
 
 	public void setKasLiikunud(boolean bool) {
-		this.kasLiikunud = bool;
+		this.kasPoleLiikunud = bool;
 	}
 }

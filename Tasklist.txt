@@ -1,8 +1,0 @@
-1. Ratsu liikumine
-4. Kuninga liikumine
-5. Tule mehhanism
-7. Sisendi kontrolli lisada see kui käimiskoha teine sümbol pole number (bü näiteks)
-8. Etturitele funktsioon, et muutuvad uueks nupuks kui jõuavad platsi lõppu.
-9. Win ja lose condition
-10. Peale mängu lõppemist mängu võitija konsoolile kuvada.
-** Kui aega jääb üle, siis nendes minu if lausetes seal diagonaali all saab kerget diskreetset matat teha nende tingimustega ja kui võimalik, siis võib neid lihtsustada ka.

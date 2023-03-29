@@ -1,5 +1,12 @@
+/**
+ * Mängulaua klass
+ * <p>
+ * Klassi abil luuakse mängulaud ning sisaldab mängu üldfunktsioone
+ */
+
+
 public class Mangulaud {
-	public Nupp[][] laud;
+	final private Nupp[][] laud;                        // Mängulaua maatriks
 
 
 	public Mangulaud(Mangija mangijaMust, Mangija mangijaValge) {
@@ -9,27 +16,39 @@ public class Mangulaud {
 		this.laud = laud;
 	}
 
+	public Nupp[][] getLaud() {
+		return laud;
+	}
 
+
+	/**
+	 * Loob kõik vajalikud nupud, lisab need lauale ning mängijate nuppude listidesse
+	 *
+	 * @param laud         Mängulaud
+	 * @param mangijaMust  Mustadega mängija
+	 * @param mangijaValge Valgetega mängija
+	 */
 	public static void asetaNupudLauale(Nupp[][] laud, Mangija mangijaMust, Mangija mangijaValge) {
-		String[] nimetused = {"vanker1", "ratsu1", "oda1", "lipp", "kuningas", "oda2", "ratsu2", "vanker2"};
+		String[] nimetused = {"vanker1", "ratsu1", "oda1", "lipp", "kuningas", "oda2", "ratsu2", "vanker2"};    // Kõik võimalikud nupud
 
-		for (int veerg = 0; veerg < 8; veerg++) {
-			//Siin number ka etturi lõppu, sest kuidagi on vaja neid eristada.
+		for (int veerg = 0; veerg < 8; veerg++) {            // Käib läbi iga veeru
 
+			// Must ettur
 			Nupp mustEttur = new Nupp("ettur" + (veerg + 1), 'm', 1, veerg);
 			mangijaMust.getNupud().add(mustEttur);
 			laud[1][veerg] = mustEttur;
 
+			// Valge ettur
 			Nupp valgeEttur = new Nupp("ettur" + (veerg + 1), 'v', 6, veerg);
 			mangijaValge.getNupud().add(valgeEttur);
 			laud[6][veerg] = valgeEttur;
 
-			//Ülejäänud nupud
-
+			// Must nupp veerus
 			Nupp mustNupp = new Nupp(nimetused[veerg], 'm', 0, veerg);
 			mangijaMust.getNupud().add(mustNupp);
 			laud[0][veerg] = mustNupp;
 
+			// Valge nupp veerus
 			Nupp valgeNupp = new Nupp(nimetused[veerg], 'v', 7, veerg);
 			mangijaValge.getNupud().add(valgeNupp);
 			laud[7][veerg] = valgeNupp;
@@ -37,26 +56,31 @@ public class Mangulaud {
 		}
 	}
 
-	public void väljastaLaud(){
+	/**
+	 * Väljastab mängulaua loetaval kujul
+	 */
+	public void väljastaLaud() {
 		System.out.println("  |" + "-----".repeat(8) + "-------" + "|");
 		for (int i = 0; i < 8; i++) {
 			System.out.print((8 - i) + " | ");
 			for (int j = 0; j < 8; j++) {
-				if (laud[i][j] == null)
-					System.out.print("    | ");
+				if (laud[i][j] == null) System.out.print("    | ");
 				else {
 					String nimi = laud[i][j].getNimi();
 					char värv = laud[i][j].getVarv();
-					System.out.print(nimi.substring(0,1).toUpperCase() + nimi.substring(nimi.length() - 1).toUpperCase() + värv + " | ");
+					System.out.print(nimi.substring(0, 1).toUpperCase() + nimi.substring(nimi.length() - 1).toUpperCase() + värv + " | ");
 				}
 			}
 			System.out.print("\n");
-			System.out.println("  |" + "-----".repeat(8) +  "-------" + "|");
+			System.out.println("  |" + "-----".repeat(8) + "-------" + "|");
 		}
 		System.out.println("     a     b     c     d     e     f     g     h");
 	}
 
-	public static void reeglid(Mangija mängija1, Mangija mängija2){
+	/**
+	 * Väljastab reeglid
+	 */
+	public static void reeglid(Mangija mängija1, Mangija mängija2) {
 		System.out.println("Male!");
 		System.out.println("""
 				Juhised mängimiseks:\s
