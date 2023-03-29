@@ -1,0 +1,51 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,13 +4,9 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Lisasin peameetodi">
++    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Rannari töö viimistlused ja kontrolli klassi alged">
++      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/KaiguKontroll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KaiguKontroll.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Mangija.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangija.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Mangulaud.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangulaud.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Nupp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nupp.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -44,12 +40,11 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">
+-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+-  </component>
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true"
++  }
++}]]></component>
+   <component name="RunManager">
+     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="main" />
+@@ -60,6 +55,8 @@
+     </configuration>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Application.main" />
++        <item itemvalue="Application.main" />
+         <item itemvalue="Application.main" />
+       </list>
+     </recent_temporary>
