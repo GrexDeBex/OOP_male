@@ -17,21 +17,21 @@ public class Mangulaud {
 			//Siin number ka etturi lõppu, sest kuidagi on vaja neid eristada.
 
 			Nupp mustEttur = new Nupp("ettur" + (veerg + 1), 'm', 1, veerg);
-			mangijaMust.nupud[veerg] = mustEttur;
+			mangijaMust.getNupud().add(mustEttur);
 			laud[1][veerg] = mustEttur;
 
 			Nupp valgeEttur = new Nupp("ettur" + (veerg + 1), 'v', 6, veerg);
-			mangijaValge.nupud[veerg] = valgeEttur;
+			mangijaValge.getNupud().add(valgeEttur);
 			laud[6][veerg] = valgeEttur;
 
 			//Ülejäänud nupud
 
 			Nupp mustNupp = new Nupp(nimetused[veerg], 'm', 0, veerg);
-			mangijaMust.nupud[8 + veerg] = mustNupp;
+			mangijaMust.getNupud().add(mustNupp);
 			laud[0][veerg] = mustNupp;
 
 			Nupp valgeNupp = new Nupp(nimetused[veerg], 'v', 7, veerg);
-			mangijaValge.nupud[8 + veerg] = valgeNupp;
+			mangijaValge.getNupud().add(valgeNupp);
 			laud[7][veerg] = valgeNupp;
 
 		}

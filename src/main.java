@@ -24,11 +24,11 @@ public class main {
 		Mangulaud.reeglid(mangija1, mangija2);
 		mangulaud.väljastaLaud();
 
-
 		//Põhi mängu tsükkel
 		//Tsükli lõpetamiseks kirjuta lõpeta
 		while (true) {
 			System.out.println(kaiguTegija.getVarv() + " käib!");
+
 			System.out.println("Sisesta oma käik: ");
 			Scanner sc = new Scanner(System.in);
 			String[] sisend = sc.nextLine().split(" ");
@@ -37,23 +37,19 @@ public class main {
 				break;
 			}
 
-			Nupp valitudNupp = KaiguKontroll.valiNupp(sisend[0], kaiguTegija.nupud);
+			Nupp valitudNupp = KaiguKontroll.valiNupp(sisend[0], kaiguTegija.getNupud());
 			if (valitudNupp == null){
 				System.out.println("Sellist nuppu pole laual või olemas");
 				continue;
 			}
 
+
 			int[] sihtkoht = KaiguKontroll.teisendaSihtkoht(sisend[1]);
-			System.out.println(Arrays.toString(sihtkoht));
-			if (sihtkoht[0] == -1 || !KaiguKontroll.kontroll(valitudNupp, sihtkoht[0], sihtkoht[1], mangulaud.laud, kaiguTegija.getVarv(), vastane.getNupud())){
+			if (sihtkoht[0] == -1 || !KaiguKontroll.kontroll(valitudNupp, sihtkoht[0], sihtkoht[1], mangulaud.laud, vastane)){
 				System.out.println("Vale käik");
 				continue;
 			}
 
-			for (int i = 0; i < vastane.getNupud().length; i++) {
-				if (vastane.getNupud()[i] != null && vastane.getNupud()[i].isEnPassant())
-					vastane.getNupud()[i].setEnPassant(false);
-			}
 
 			if (kaiguTegija == mangija1) {
 				kaiguTegija = mangija2;
@@ -63,7 +59,6 @@ public class main {
 				kaiguTegija = mangija1;
 				vastane = mangija2;
 			}
-
 
 			mangulaud.väljastaLaud();
 		}

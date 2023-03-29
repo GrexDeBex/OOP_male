@@ -1,22 +1,25 @@
+import java.util.HashSet;
+
 public class Mangija {
 	private char varv;
-	public Nupp[] nupud;
+	private HashSet<Nupp> nupud;
 
 	public Mangija() {
-		this.nupud = new Nupp[16];
+		this.nupud = new HashSet<>();
 	}
 
 	public char getVarv() {
 		return varv;
 	}
 
-	public Nupp[] getNupud() {
-		return nupud;
-	}
-
 	public void setVarv(char varv) {
 		this.varv = varv;
 	}
+
+	public HashSet<Nupp> getNupud() {
+		return nupud;
+	}
+
 
 	public static void seaMängijateVärvid(Mangija mängija1, Mangija mängija2) {
 		if (Math.random() < 0.50) {
