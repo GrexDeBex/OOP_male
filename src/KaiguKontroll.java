@@ -176,12 +176,13 @@ public class KaiguKontroll {
 	}
 
 	public static boolean diagonaal(Nupp nupp, int rida, int veerg, Nupp[][] laud, Nupp[] vastaseNupud, char varv){
-
+		int asukohtx = nupp.getAsukohtx();
+		int asukohty = nupp.getAsukohty();
 		//Üles vasakule
 		if (rida < nupp.getAsukohtx() && veerg < nupp.getAsukohty())
 			for (int i = 1; i <= Math.min(nupp.getAsukohtx(), nupp.getAsukohty()); i++) {
-				if (laud[nupp.getAsukohtx() - i][nupp.getAsukohty() - i] != null && nupp.getAsukohtx() - i == rida && nupp.getAsukohty() - i == veerg
-				&& laud[nupp.getAsukohtx() - i][nupp.getAsukohty() - i].getVarv() != varv){
+				if (laud[asukohtx - i][asukohty - i] != null && asukohtx - i == rida && asukohty - i == veerg
+				&& laud[asukohtx - i][asukohty - i].getVarv() != varv){
 					nuppSööb(nupp, rida, veerg, laud, vastaseNupud);
 					return true;
 				}
