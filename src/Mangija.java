@@ -6,11 +6,10 @@
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Mangija {
 	private char varv;                                                // Värv, millega mängija mängib
-	private ArrayList<Nupp> nupud;                                // Mängija olemas olevad nupud
+	final private ArrayList<Nupp> nupud;                                // Mängija olemas olevad nupud
 
 	public Mangija() {
 		this.nupud = new ArrayList<>();
