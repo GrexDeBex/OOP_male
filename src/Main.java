@@ -47,14 +47,14 @@ public class Main {
 
 			Nupp valitudNupp = KaiguKontroll.valiNupp(sisend[0], kaiguTegija.getNupud());	// Kontrollib valitud nupu õigsust
 			if (valitudNupp == null) {
-				System.out.println("Sellist nuppu pole laual või olemas");
+				System.out.println("Sellist nuppu pole laual või olemas\n");
 				continue;
 			}
 
 
 			int[] sihtkoht = KaiguKontroll.teisendaSihtkoht(sisend[1]);						// Kontrollib sihtkoha ja käigu õigsust
 			if (sihtkoht[0] == -1 || !KaiguKontroll.kontroll(valitudNupp, sihtkoht[0], sihtkoht[1], mangulaud.getLaud(), vastane)) {
-				System.out.println("Vale käik");
+				System.out.println("Vale käik\n");
 				continue;
 			}
 
