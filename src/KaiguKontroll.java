@@ -215,15 +215,16 @@ public class KaiguKontroll {
 	 * @param laud Mängulaud
 	 */
 	public static void etturiMuutus(Nupp nupp, int rida, Nupp[][] laud) {
-		Scanner sc;
+		String sisend;
 
 		if (rida == 0 || rida == 7) {        // Kui ettur on viimasel real
 
 			while (true) {                    // Küsib vastaselt sisendit
 				System.out.println("Vali nupp (vanker, ratsu, oda, lipp):");
-				sc = new Scanner(System.in);
+				Scanner sc = new Scanner(System.in);
+				sisend = sc.nextLine();
 				ArrayList<String> valikud = new ArrayList<>(Arrays.asList("vanker", "ratsu", "oda", "lipp"));
-				if (valikud.contains(sc.toString())) {
+				if (valikud.contains(sisend)) {
 					break;
 				}
 				System.out.println("Vale sisend!!!");
@@ -234,14 +235,20 @@ public class KaiguKontroll {
 				boolean sobivNimi = true;
 				for (Nupp[] nupud : laud) {
 					for (Nupp nupp1 : nupud) {
-						if (nupp1.getNimi().equals(sc + Integer.toString(i))) {        // Kontrollib, et sama nimega nuppu juba ei oleks
+						if (nupp1 == null){
+							continue;
+						}
+						if (nupp1.getNimi().equals(sisend + i)) {        // Kontrollib, et sama nimega nuppu juba ei oleks
 							sobivNimi = false;
 							break;
 						}
 					}
 				}
 
-				if (sobivNimi) nupp.setNimi(sc + Integer.toString(i));
+				if (sobivNimi) {
+					nupp.setNimi(sisend + i);
+					break;
+				}
 			}
 		}
 	}

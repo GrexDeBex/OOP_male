@@ -84,8 +84,6 @@ public class Main {
 				vastane = mangija2;
 			}
 
-
-
 		}
 	}
 }

@@ -82,6 +82,7 @@ public class Mangulaud {
 	 */
 	public static void reeglid(Mangija mängija1, Mangija mängija2) {
 		System.out.println("Male!");
+		System.out.println("Reeglid leiab leheküljelt https://brainking.com/ee/GameRules?tp=1");
 		System.out.println("""
 				Juhised mängimiseks:\s
 				Liikumiseks tuleb kirjutada konsooli nupu nimetus ning tühikuga eraldada nimest käigu koht.\s

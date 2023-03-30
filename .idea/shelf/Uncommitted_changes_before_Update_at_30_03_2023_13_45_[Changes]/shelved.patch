@@ -1,0 +1,227 @@
+Index: src/KaiguKontroll.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\r\n * Käikude kontrollide klass\r\n * <p>\r\n * Klass sisaldab kõiki käigu sooritamise kontrollide funktsioone\r\n */\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Arrays;\r\nimport java.util.HashSet;\r\nimport java.util.Scanner;\r\n\r\npublic class KaiguKontroll {\r\n\r\n\r\n\t/**\r\n\t * Leiab sisendi põhjal nupu, mida mängija tahab liigutada, või tagastab, et sellist nuppu ei ole\r\n\t *\r\n\t * @param sisend       Mängija sisestatud nimetus\r\n\t * @param mangijaNupud Kõik mängija nupud\r\n\t * @return Soovitud nupp või negatiivne tulemus\r\n\t */\r\n\tpublic static Nupp valiNupp(String sisend, HashSet<Nupp> mangijaNupud) {\r\n\t\tfor (Nupp nupp : mangijaNupud) {\r\n\t\t\tif (nupp.getNimi().equals(sisend)) return nupp;\r\n\t\t}\r\n\t\treturn null;\r\n\t}\r\n\r\n\t/**\r\n\t * Teisendab mängija sisestatud sihtkoha rea ning veeru indeksiks mängulaua maatriksis või et sellist ei leidu\r\n\t *\r\n\t * @param sisend Mängija sisend\r\n\t * @return Järjend, kus esimene koht on kas rida või -1 (vastavalt, kas sihtkoht leidus või mitte) ning teine on veerg\r\n\t */\r\n\tpublic static int[] teisendaSihtkoht(String sisend) {\r\n\t\tint[] tulemus = new int[2];\r\n\r\n\t\ttry {            // Kontrollib, et sisestatud rida oleks sobival kujul\r\n\t\t\ttulemus[0] = 8 - Integer.parseInt(sisend.substring(1));\r\n\t\t\tif (tulemus[0] < 0 || tulemus[0] > 7) tulemus[0] = -1;\r\n\r\n\t\t} catch (Exception e) {\r\n\t\t\ttulemus[0] = -1;\r\n\t\t}\r\n\r\n\t\tchar[] tahed = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};\r\n\t\tboolean leitud = false;\r\n\r\n\t\tfor (int indeks = 0; indeks < 8; indeks++) {    // Kontrollib, et sisestatud veerg oleks sobival kujul\r\n\t\t\tif (tahed[indeks] == sisend.charAt(0)) {\r\n\t\t\t\ttulemus[1] = indeks;\r\n\t\t\t\tleitud = true;\r\n\t\t\t\tbreak;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tif (!leitud) tulemus[0] = -1;\r\n\r\n\t\treturn tulemus;\r\n\t}\r\n\r\n\t/**\r\n\t * Võtab mängija liikumissoovi ning kontrollib, kas soovitud käik on võimalik ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud nupp\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastas mängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean kontroll(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tString nimi = nupp.getNimi().substring(0, nupp.getNimi().length() - 1);        // Võtab nupult nupu tüübi ilma numbrita\r\n\t\treturn switch (nimi) {\r\n\t\t\tcase \"ettur\" -> ettur(nupp, rida, veerg, laud, vastane);            // Kasutatakse sobivat kontrolli\r\n\t\t\tcase \"vanker\" -> risti(nupp, rida, veerg, laud, vastane);\r\n\t\t\tcase \"ratsu\" -> ratsu(nupp, rida, veerg, laud, vastane);\r\n\t\t\tcase \"oda\" -> diagonaal(nupp, rida, veerg, laud, vastane);\r\n\t\t\tcase \"lipp\" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);\r\n\t\t\tcase \"kuningas\" -> kuningas(nupp, rida, veerg, laud, vastane);\r\n\t\t\tdefault -> false;\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib, kas nuppu saab asetada soovitud ruudule ning teeb seda\r\n\t *\r\n\t * @param nupp    Mängija valitud nupp\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean ruuduKontroll(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tif (laud[rida][veerg] == null) {                                // Kui ruudul ei ole nuppe ees\r\n\t\t\tliigutaNuppu(nupp, rida, veerg, laud);\r\n\t\t\treturn true;\r\n\r\n\t\t} else if (nupp.getVarv() != laud[rida][veerg].getVarv()) {    // Kui ruudul on vastase nupp\r\n\t\t\tkaotaNupp(vastane, nupp.getAsukohtx(), veerg, laud);\r\n\t\t\tliigutaNuppu(nupp, rida, veerg, laud);\r\n\t\t\treturn true;\r\n\t\t}\r\n\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t * Liigutab nupu soovitud ruudule\r\n\t *\r\n\t * @param nupp  Mängija valitud nupp\r\n\t * @param rida  Sihtkoha rida\r\n\t * @param veerg Sihtkoha veerg\r\n\t * @param laud  Mängulaud\r\n\t */\r\n\tpublic static void liigutaNuppu(Nupp nupp, int rida, int veerg, Nupp[][] laud) {\r\n\t\tlaud[nupp.getAsukohtx()][nupp.getAsukohty()] = null;    // Kustutab nupu eelmiselt kohale\r\n\t\tlaud[rida][veerg] = nupp;                                // Viib uuele kohale\r\n\t\tnupp.setAsukohtx(rida);                                    // Uuendab nupu andmeid\r\n\t\tnupp.setAsukohty(veerg);\r\n\r\n\t\tfor (Nupp[] nupud : laud) {            // Paneb kõik eelnevat en passant lipud kinni\r\n\t\t\tfor (Nupp nupp1 : nupud) {\r\n\t\t\t\tif (nupp1 != null) nupp1.setEnPassant(false);\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tif (nupp.kasPoleLiikunud()) {            // Lisab en passant lipu\r\n\t\t\tnupp.setKasLiikunud(true);\r\n\t\t\tnupp.setEnPassant(true);\r\n\t\t}\r\n\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Kaotab vastase nupu, kui mängija soovis seda rünnata\r\n\t *\r\n\t * @param vastane Vastasmängija\r\n\t * @param rida    Vastasmängija nupu rida\r\n\t * @param veerg   Vastasmängija nupu veerg\r\n\t * @param laud    Mängulaud\r\n\t */\r\n\tpublic static void kaotaNupp(Mangija vastane, int rida, int veerg, Nupp[][] laud) {\r\n\t\tvastane.getNupud().remove(laud[rida][veerg]);        // Kustutab laualt\r\n\t\tlaud[rida][veerg] = null;                            // Kustutab vastase nuppude seast\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib etturi käigu sobivust ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud ettur\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean ettur(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\r\n\t\tif (nupp.getAsukohty() == veerg) {            // Kui mängija tahtis liikuda otse\r\n\t\t\tif (laud[rida][veerg] != null) {           // Kontrollib, et sihtkoht oleks tühi\r\n\t\t\t\treturn false;\r\n\t\t\t}\r\n\r\n\t\t\tif (nupp.getAsukohtx() + 1 == rida && nupp.getVarv() == 'm' || nupp.getAsukohtx() - 1 == rida && nupp.getVarv() == 'v') {    // Kontrollib, kas liiguti ühe võrra\r\n\t\t\t\tliigutaNuppu(nupp, rida, veerg, laud);\r\n\t\t\t\tetturiMuutus(nupp, rida, laud);\r\n\t\t\t\treturn true;\r\n\t\t\t}\r\n\r\n\t\t\tif (nupp.getAsukohtx() + 2 == rida && nupp.getVarv() == 'm' || nupp.getAsukohtx() - 2 == rida && nupp.getVarv() == 'v') {    // Kontrollib kahe võrra liikumist\r\n\t\t\t\tif (nupp.kasPoleLiikunud()) {\r\n\t\t\t\t\tliigutaNuppu(nupp, rida, veerg, laud);\r\n\t\t\t\t\tetturiMuutus(nupp, rida, laud);\r\n\t\t\t\t\treturn true;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\r\n\t\t} else if (nupp.getAsukohty() == veerg + 1 || nupp.getAsukohty() == veerg - 1) {        // Kontrollib diagonaalis liikumist\r\n\t\t\t// Kontrollib vastase nuppu rünnakut\r\n\t\t\tif (nupp.getAsukohtx() + 1 == rida && nupp.getVarv() == 'm' || nupp.getAsukohtx() - 1 == rida && nupp.getVarv() == 'v') {\r\n\t\t\t\tif (laud[rida][veerg] != null) {                                    // Tavaline rünnak\r\n\t\t\t\t\tif (ruuduKontroll(nupp, rida, veerg, laud, vastane)) {\r\n\t\t\t\t\t\tetturiMuutus(nupp, rida, laud);\r\n\t\t\t\t\t\treturn true;\r\n\t\t\t\t\t}\r\n\r\n\r\n\t\t\t\t} else {                                                    // En passant\r\n\t\t\t\t\tNupp korvalNupp = laud[nupp.getAsukohtx()][veerg];\r\n\t\t\t\t\tif (korvalNupp != null) {                                // Kontrollib, et etturi kõrval oleks vastase ettur\r\n\t\t\t\t\t\tif (korvalNupp.getNimi().substring(0, korvalNupp.getNimi().length() - 1).equals(\"ettur\")\r\n\t\t\t\t\t\t\t\t&& korvalNupp.getVarv() != nupp.getVarv()) {\r\n\r\n\t\t\t\t\t\t\tif (korvalNupp.isEnPassant()) {        // Kontrollib en passanti\r\n\t\t\t\t\t\t\t\tkaotaNupp(vastane, nupp.getAsukohtx(), veerg, laud);\r\n\t\t\t\t\t\t\t\tliigutaNuppu(nupp, rida, veerg, laud);\r\n\t\t\t\t\t\t\t\treturn true;\r\n\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t * Kui ettur on jõudnud mängulaua lõppu, siis pakutase selle välja vahetamist\r\n\t *\r\n\t * @param nupp Ettur\r\n\t * @param rida Etturi rida\r\n\t * @param laud Mängulaud\r\n\t */\r\n\tpublic static void etturiMuutus(Nupp nupp, int rida, Nupp[][] laud) {\r\n\t\tScanner sc;\r\n\r\n\t\tif (rida == 0 || rida == 7) {        // Kui ettur on viimasel real\r\n\r\n\t\t\twhile (true) {                    // Küsib vastaselt sisendit\r\n\t\t\t\tSystem.out.println(\"Vali nupp (vanker, ratsu, oda, lipp):\");\r\n\t\t\t\tsc = new Scanner(System.in);\r\n\t\t\t\tArrayList<String> valikud = new ArrayList<>(Arrays.asList(\"vanker\", \"ratsu\", \"oda\", \"lipp\"));\r\n\t\t\t\tif (valikud.contains(sc.toString())) {\r\n\t\t\t\t\tbreak;\r\n\t\t\t\t}\r\n\t\t\t\tSystem.out.println(\"Vale sisend!!!\");\r\n\t\t\t}\r\n\r\n\r\n\t\t\tfor (int i = 0; i < 10; i++) {        // Otsib nupule sobivat indeksit, millega seda kuvada\r\n\t\t\t\tboolean sobivNimi = true;\r\n\t\t\t\tfor (Nupp[] nupud : laud) {\r\n\t\t\t\t\tfor (Nupp nupp1 : nupud) {\r\n\t\t\t\t\t\tif (nupp1.getNimi().equals(sc + Integer.toString(i))) {        // Kontrollib, et sama nimega nuppu juba ei oleks\r\n\t\t\t\t\t\t\tsobivNimi = false;\r\n\t\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\r\n\t\t\t\tif (sobivNimi) nupp.setNimi(sc + Integer.toString(i));\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib ratsu käigu sobivust ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud ratsu\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean ratsu(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tint kontrollitavRida = nupp.getAsukohtx() + 2;        // Esimene ruut, mida kontrollitakse\r\n\t\tint kontrollitavVeerg = nupp.getAsukohtx() + 1;\r\n\t\tint veeruSuund = 1;                                    // Kontrollimis suund\r\n\t\tint reaSuund = 1;\r\n\r\n\t\tfor (int i = 0; i < 8; i++) {                                // Kontrollib ratsu kõiki võimalike liikumiskohti\r\n\t\t\tif (rida == kontrollitavRida && veerg == kontrollitavVeerg) {    // Ratsu liigub mööda rombi (välja arvatud tipud)\r\n\t\t\t\truuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t\t}\r\n\r\n\t\t\tkontrollitavRida += reaSuund;\r\n\t\t\tkontrollitavVeerg += veeruSuund;\r\n\r\n\t\t\tif (i == 1) {                            // Suuna muutused, kui kontrollitakse järgmist külge\r\n\t\t\t\tveeruSuund = -1;\r\n\t\t\t\tkontrollitavRida += reaSuund;\r\n\t\t\t\tkontrollitavVeerg += veeruSuund;\r\n\t\t\t}\r\n\r\n\t\t\tif (i == 3) {\r\n\t\t\t\treaSuund = -1;\r\n\t\t\t\tkontrollitavRida += reaSuund;\r\n\t\t\t\tkontrollitavVeerg += veeruSuund;\r\n\t\t\t}\r\n\r\n\t\t\tif (i == 5) {\r\n\t\t\t\tveeruSuund = 1;\r\n\t\t\t\tkontrollitavRida += reaSuund;\r\n\t\t\t\tkontrollitavVeerg += veeruSuund;\r\n\t\t\t}\r\n\r\n\t\t}\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib kuninga käigu sobivust ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud kuningas\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean kuningas(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tint kontrollitavRida = nupp.getAsukohtx() + 1;            // Esimene kontrollitav ruut\r\n\t\tint kontrollitavVeerg = nupp.getAsukohtx() + 1;\r\n\t\tint veeruSuund = 0;                                        // Kontrollimissuund\r\n\t\tint reaSuund = 1;\r\n\r\n\t\tfor (int i = 0; i < 9; i++) {                                        // Kontrollib kõiki kuninga käike\r\n\t\t\tif (rida == kontrollitavRida && veerg == kontrollitavVeerg) {        // Kuninga liikumine on ruut ehk kontrollitakse mööda ruutu\r\n\t\t\t\truuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t\t}\r\n\r\n\t\t\tkontrollitavRida += reaSuund;\r\n\t\t\tkontrollitavVeerg += veeruSuund;\r\n\r\n\t\t\tif (i == 2) {                    // Suuna muutus, kui kontrollitakse järgmist külge\r\n\t\t\t\tveeruSuund = -1;\r\n\t\t\t\treaSuund = 0;\r\n\t\t\t}\r\n\r\n\t\t\tif (i == 4) {\r\n\t\t\t\tveeruSuund = 0;\r\n\t\t\t\treaSuund = -1;\r\n\t\t\t}\r\n\r\n\t\t\tif (i == 6) {\r\n\t\t\t\tveeruSuund = 1;\r\n\t\t\t\treaSuund = 0;\r\n\t\t\t}\r\n\r\n\t\t}\r\n\r\n\t\tint nupuRida = nupp.getAsukohtx();\r\n\t\t// Kontrollib musta kuninga vangerdust\r\n\t\tif (rida == nupuRida && veerg == 2 && nupp.kasPoleLiikunud() && laud[nupuRida][0] != null) {\r\n\t\t\tif (laud[nupuRida][0].kasPoleLiikunud() && laud[nupuRida][1] == null && laud[nupuRida][2] == null && laud[nupuRida][3] == null) {\r\n\r\n\t\t\t\truuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t\t\treturn ruuduKontroll(laud[nupuRida][0], rida, 3, laud, vastane);\r\n\t\t\t}\r\n\t\t}\r\n\t\t// Kontrollib valge kuninga vangerdust\r\n\t\tif (rida == nupuRida && veerg == 6 && nupp.kasPoleLiikunud() && laud[nupuRida][7] != null) {\r\n\t\t\tif (laud[nupuRida][7].kasPoleLiikunud() && laud[nupuRida][6] == null && laud[nupuRida][5] == null) {\r\n\r\n\t\t\t\truuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t\t\treturn ruuduKontroll(laud[nupuRida][7], rida, 5, laud, vastane);\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib risti liikuva nupu käigu sobivust ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud nupp\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean risti(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tif (nupp.getAsukohtx() == rida && nupp.getAsukohty() != veerg) {\t// Kui liigutamine oli pikki rida\r\n\t\t\tint suund = (veerg > nupp.getAsukohty()) ? 1 : -1;        \t\t// Määrab liikumissuuna\r\n\r\n\t\t\tfor (int i = suund; i < Math.abs(veerg - nupp.getAsukohty()); i += suund) {  // Kontrollib, kas tee sihtkohta on vaba\r\n\t\t\t\tif (laud[rida][nupp.getAsukohty() + i] != null) {\r\n\t\t\t\t\treturn false;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\treturn ruuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t}\r\n\r\n\r\n\t\tif (nupp.getAsukohtx() != rida && nupp.getAsukohty() == veerg) { \t// Kui liigutamine oli pikki veergu\r\n\t\t\tint suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        \t\t// Määrab liikumissuuna\r\n\r\n\t\t\tfor (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) { \t// Kontrollib, kas tee sihtkohta on vaba\r\n\t\t\t\tif (laud[nupp.getAsukohtx() + i][veerg] != null) {\r\n\t\t\t\t\treturn false;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\treturn ruuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t}\r\n\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t * Kontrollib diagonaalis liikuva nupu käigu sobivust ning sooritab selle\r\n\t *\r\n\t * @param nupp    Mängija valitud nupp\r\n\t * @param rida    Sihtkoha rida\r\n\t * @param veerg   Sihtkoha veerg\r\n\t * @param laud    Mängulaud\r\n\t * @param vastane Vastasmängija\r\n\t * @return Kas käiku sai sooritada\r\n\t */\r\n\tpublic static boolean diagonaal(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {\r\n\t\tif (nupp.getAsukohtx() - nupp.getAsukohty() == rida - veerg && nupp.getAsukohtx() != rida) {\t// Kui liikumine oli pikki peadiagonaali\r\n\t\t\tint suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        \t\t\t\t\t\t// Määrab liikumissuuna\r\n\r\n\t\t\tfor (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {     // Kontrollib, kas tee sihtkohta on vaba\r\n\t\t\t\tif (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() + i] != null) {\r\n\t\t\t\t\treturn false;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\treturn ruuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t}\r\n\r\n\t\tif (nupp.getAsukohtx() + nupp.getAsukohty() == rida + veerg && nupp.getAsukohtx() != rida) {    // Kui liikumine oli pikki kõrvaldiagonaali\r\n\t\t\tint suund = (rida > nupp.getAsukohtx()) ? 1 : -1;       \t\t\t\t\t\t// Määrab liikumissuuna\r\n\r\n\t\t\tfor (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {      // Kontrollib, kas tee sihtkohta on vaba\r\n\t\t\t\tif (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() - i] != null) {\r\n\t\t\t\t\treturn false;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\treturn ruuduKontroll(nupp, rida, veerg, laud, vastane);\r\n\t\t}\r\n\r\n\r\n\t\treturn false;\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/KaiguKontroll.java b/src/KaiguKontroll.java
+--- a/src/KaiguKontroll.java	(revision cd58fc3caef14061abaa843d7ee0f0f63659638c)
++++ b/src/KaiguKontroll.java	(date 1680169201263)
+@@ -76,7 +76,7 @@
+ 			case "vanker" -> risti(nupp, rida, veerg, laud, vastane);
+ 			case "ratsu" -> ratsu(nupp, rida, veerg, laud, vastane);
+ 			case "oda" -> diagonaal(nupp, rida, veerg, laud, vastane);
+-			case "lipp" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);
++			case "lipp" -> lipp(nupp, rida, veerg, laud, vastane);
+ 			case "kuningas" -> kuningas(nupp, rida, veerg, laud, vastane);
+ 			default -> false;
+ 		};
+@@ -98,7 +98,7 @@
+ 			return true;
+ 
+ 		} else if (nupp.getVarv() != laud[rida][veerg].getVarv()) {    // Kui ruudul on vastase nupp
+-			kaotaNupp(vastane, nupp.getAsukohtx(), veerg, laud);
++			kaotaNupp(vastane, rida, veerg, laud);
+ 			liigutaNuppu(nupp, rida, veerg, laud);
+ 			return true;
+ 		}
+@@ -258,7 +258,7 @@
+ 	 * @return Kas käiku sai sooritada
+ 	 */
+ 	public static boolean ratsu(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {
+-		int kontrollitavRida = nupp.getAsukohtx() + 2;        // Esimene ruut, mida kontrollitakse
++		int kontrollitavRida = nupp.getAsukohtx() - 2;        // Esimene ruut, mida kontrollitakse
+ 		int kontrollitavVeerg = nupp.getAsukohtx() + 1;
+ 		int veeruSuund = 1;                                    // Kontrollimis suund
+ 		int reaSuund = 1;
+@@ -304,34 +304,12 @@
+ 	 * @return Kas käiku sai sooritada
+ 	 */
+ 	public static boolean kuningas(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {
+-		int kontrollitavRida = nupp.getAsukohtx() + 1;            // Esimene kontrollitav ruut
+-		int kontrollitavVeerg = nupp.getAsukohtx() + 1;
+-		int veeruSuund = 0;                                        // Kontrollimissuund
+-		int reaSuund = 1;
+-
+-		for (int i = 0; i < 9; i++) {                                        // Kontrollib kõiki kuninga käike
+-			if (rida == kontrollitavRida && veerg == kontrollitavVeerg) {        // Kuninga liikumine on ruut ehk kontrollitakse mööda ruutu
+-				ruuduKontroll(nupp, rida, veerg, laud, vastane);
+-			}
+-
+-			kontrollitavRida += reaSuund;
+-			kontrollitavVeerg += veeruSuund;
+-
+-			if (i == 2) {                    // Suuna muutus, kui kontrollitakse järgmist külge
+-				veeruSuund = -1;
+-				reaSuund = 0;
++		for (int i = -1; i < 2; i++) {
++			for (int j = -1; j < 2; j++) {
++				if (rida == nupp.getAsukohtx() + i && veerg == nupp.getAsukohty() + j && (i != 0 || j != 0)){
++					return ruuduKontroll(nupp, rida, veerg, laud, vastane);
++				}
+ 			}
+-
+-			if (i == 4) {
+-				veeruSuund = 0;
+-				reaSuund = -1;
+-			}
+-
+-			if (i == 6) {
+-				veeruSuund = 1;
+-				reaSuund = 0;
+-			}
+-
+ 		}
+ 
+ 		int nupuRida = nupp.getAsukohtx();
+@@ -355,6 +333,14 @@
+ 		return true;
+ 	}
+ 
++	public static boolean lipp(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane){
++		if (risti(nupp, rida, veerg, laud, vastane)){
++			return true;
++		}
++
++		return diagonaal(nupp, rida, veerg, laud, vastane);
++	}
++
+ 	/**
+ 	 * Kontrollib risti liikuva nupu käigu sobivust ning sooritab selle
+ 	 *
+@@ -369,7 +355,7 @@
+ 		if (nupp.getAsukohtx() == rida && nupp.getAsukohty() != veerg) {	// Kui liigutamine oli pikki rida
+ 			int suund = (veerg > nupp.getAsukohty()) ? 1 : -1;        		// Määrab liikumissuuna
+ 
+-			for (int i = suund; i < Math.abs(veerg - nupp.getAsukohty()); i += suund) {  // Kontrollib, kas tee sihtkohta on vaba
++			for (int i = suund; Math.abs(i) < Math.abs(veerg - nupp.getAsukohty()); i += suund) {  // Kontrollib, kas tee sihtkohta on vaba
+ 				if (laud[rida][nupp.getAsukohty() + i] != null) {
+ 					return false;
+ 				}
+@@ -382,7 +368,7 @@
+ 		if (nupp.getAsukohtx() != rida && nupp.getAsukohty() == veerg) { 	// Kui liigutamine oli pikki veergu
+ 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        		// Määrab liikumissuuna
+ 
+-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) { 	// Kontrollib, kas tee sihtkohta on vaba
++			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) { 	// Kontrollib, kas tee sihtkohta on vaba
+ 				if (laud[nupp.getAsukohtx() + i][veerg] != null) {
+ 					return false;
+ 				}
+@@ -408,7 +394,7 @@
+ 		if (nupp.getAsukohtx() - nupp.getAsukohty() == rida - veerg && nupp.getAsukohtx() != rida) {	// Kui liikumine oli pikki peadiagonaali
+ 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        						// Määrab liikumissuuna
+ 
+-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {     // Kontrollib, kas tee sihtkohta on vaba
++			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) {     // Kontrollib, kas tee sihtkohta on vaba
+ 				if (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() + i] != null) {
+ 					return false;
+ 				}
+@@ -420,7 +406,7 @@
+ 		if (nupp.getAsukohtx() + nupp.getAsukohty() == rida + veerg && nupp.getAsukohtx() != rida) {    // Kui liikumine oli pikki kõrvaldiagonaali
+ 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;       						// Määrab liikumissuuna
+ 
+-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {      // Kontrollib, kas tee sihtkohta on vaba
++			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) {      // Kontrollib, kas tee sihtkohta on vaba
+ 				if (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() - i] != null) {
+ 					return false;
+ 				}
+@@ -429,7 +415,6 @@
+ 			return ruuduKontroll(nupp, rida, veerg, laud, vastane);
+ 		}
+ 
+-
+ 		return false;
+ 	}
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"52411c45-5dc5-40b0-ba5e-3b32e4c86193\" name=\"Changes\" comment=\"Vanker, ettur, diagonaal, lipp\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Tasklist.txt\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Tasklist.txt\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/KaiguKontroll.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/KaiguKontroll.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Mangija.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Mangija.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Mangulaud.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Mangulaud.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Nupp.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Nupp.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Main.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"Kontrollid\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitSEFilterConfiguration\">\r\n    <file-type-list>\r\n      <filtered-out-file-type name=\"LOCAL_BRANCH\" />\r\n      <filtered-out-file-type name=\"REMOTE_BRANCH\" />\r\n      <filtered-out-file-type name=\"TAG\" />\r\n      <filtered-out-file-type name=\"COMMIT_BY_MESSAGE\" />\r\n    </file-type-list>\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2MpAH7SOcGMxgNung8RkcZhtvTM\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"main\" />\r\n      <module name=\"OOP_male\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.main\" />\r\n        <item itemvalue=\"Application.main\" />\r\n        <item itemvalue=\"Application.main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"52411c45-5dc5-40b0-ba5e-3b32e4c86193\" name=\"Changes\" comment=\"\" />\r\n      <created>1678454060043</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1678454060043</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Initial commit\">\r\n      <created>1678454078121</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1678454078121</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Lisasin peameetodi\">\r\n      <created>1678454188288</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1678454188288</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Branchi kustutus\">\r\n      <created>1680109000410</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1680109000410</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Vanker, ettur, diagonaal, lipp\">\r\n      <created>1680118970123</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1680118970123</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"5\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Initial commit\" />\r\n    <MESSAGE value=\"Lisasin peameetodi\" />\r\n    <MESSAGE value=\"Branchi kustutus\" />\r\n    <MESSAGE value=\"Vanker, ettur, diagonaal, lipp\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Vanker, ettur, diagonaal, lipp\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision cd58fc3caef14061abaa843d7ee0f0f63659638c)
++++ b/.idea/workspace.xml	(date 1680168722268)
+@@ -4,14 +4,9 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Vanker, ettur, diagonaal, lipp">
++    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Põhiosa valmis">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Tasklist.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tasklist.txt" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/KaiguKontroll.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KaiguKontroll.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Mangija.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangija.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Mangulaud.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangulaud.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Nupp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nupp.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -60,8 +55,8 @@
+   }
+ }</component>
+   <component name="RunManager">
+-    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="main" />
++    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="Main" />
+       <module name="OOP_male" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+@@ -69,9 +64,8 @@
+     </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="Application.main" />
+-        <item itemvalue="Application.main" />
+-        <item itemvalue="Application.main" />
++        <item itemvalue="Application.Main" />
++        <item itemvalue="Application.Main" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -112,7 +106,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1680118970123</updated>
+     </task>
+-    <option name="localTasksCounter" value="5" />
++    <task id="LOCAL-00005" summary="Põhiosa valmis">
++      <created>1680131592994</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1680131592994</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -131,6 +132,23 @@
+     <MESSAGE value="Lisasin peameetodi" />
+     <MESSAGE value="Branchi kustutus" />
+     <MESSAGE value="Vanker, ettur, diagonaal, lipp" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Vanker, ettur, diagonaal, lipp" />
++    <MESSAGE value="Põhiosa valmis" />
++    <option name="LAST_COMMIT_MESSAGE" value="Põhiosa valmis" />
++  </component>
++  <component name="XDebuggerManager">
++    <breakpoint-manager>
++      <breakpoints>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/KaiguKontroll.java</url>
++          <line>336</line>
++          <option name="timeStamp" value="12" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/KaiguKontroll.java</url>
++          <line>184</line>
++          <option name="timeStamp" value="14" />
++        </line-breakpoint>
++      </breakpoints>
++    </breakpoint-manager>
+   </component>
+ </project>
+\ No newline at end of file
