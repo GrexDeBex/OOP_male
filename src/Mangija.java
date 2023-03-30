@@ -5,14 +5,15 @@
  */
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Mangija {
 	private char varv;                                                // Värv, millega mängija mängib
-	final private HashSet<Nupp> nupud;                                // Mängija olemas olevad nupud
+	private ArrayList<Nupp> nupud;                                // Mängija olemas olevad nupud
 
 	public Mangija() {
-		this.nupud = new HashSet<>();
+		this.nupud = new ArrayList<>();
 	}
 
 	public char getVarv() {
@@ -23,7 +24,7 @@ public class Mangija {
 		this.varv = varv;
 	}
 
-	public HashSet<Nupp> getNupud() {
+	public ArrayList<Nupp> getNupud() {
 		return nupud;
 	}
 

@@ -29,7 +29,7 @@ public class Mangulaud {
 	 * @param mangijaValge Valgetega mängija
 	 */
 	public static void asetaNupudLauale(Nupp[][] laud, Mangija mangijaMust, Mangija mangijaValge) {
-		String[] nimetused = {"vanker1", "ratsu1", "oda1", "lipp", "kuningas", "oda2", "ratsu2", "vanker2"};    // Kõik võimalikud nupud
+		String[] nimetused = {"vanker1", "ratsu1", "oda1", "lipp1", "kuningas1", "oda2", "ratsu2", "vanker2"};    // Kõik võimalikud nupud
 
 		for (int veerg = 0; veerg < 8; veerg++) {            // Käib läbi iga veeru
 

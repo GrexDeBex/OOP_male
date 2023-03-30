@@ -5,6 +5,7 @@
  */
 
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -58,21 +59,11 @@ public class Main {
 				continue;
 			}
 
-
-			if (kaiguTegija == mangija1) {				// Määrab, kelle kord on järgmine käik teha
-				kaiguTegija = mangija2;
-				vastane = mangija1;
-			} else {
-				kaiguTegija = mangija1;
-				vastane = mangija2;
-			}
-
-
 			mangulaud.väljastaLaud();
 
 			boolean mangLabi = true;					// Otsib kuningat vastase nuppudest
 			for (Nupp nupp : vastane.getNupud()) {
-				if (nupp.getNimi().equals("kuningas")) {
+				if (nupp.getNimi().equals("kuningas1")) {
 					mangLabi = false;
 					break;
 				}
@@ -83,6 +74,18 @@ public class Main {
 				System.out.println("Võitja on " + nimi);
 				break;
 			}
+
+
+			if (kaiguTegija == mangija1) {				// Määrab, kelle kord on järgmine käik teha
+				kaiguTegija = mangija2;
+				vastane = mangija1;
+			} else {
+				kaiguTegija = mangija1;
+				vastane = mangija2;
+			}
+
+
+
 		}
 	}
 }

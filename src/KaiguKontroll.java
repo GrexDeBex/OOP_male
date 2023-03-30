@@ -6,7 +6,6 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
 
 public class KaiguKontroll {
@@ -19,7 +18,7 @@ public class KaiguKontroll {
 	 * @param mangijaNupud Kõik mängija nupud
 	 * @return Soovitud nupp või negatiivne tulemus
 	 */
-	public static Nupp valiNupp(String sisend, HashSet<Nupp> mangijaNupud) {
+	public static Nupp valiNupp(String sisend, ArrayList<Nupp> mangijaNupud) {
 		for (Nupp nupp : mangijaNupud) {
 			if (nupp.getNimi().equals(sisend)) return nupp;
 		}
@@ -76,8 +75,8 @@ public class KaiguKontroll {
 			case "vanker" -> risti(nupp, rida, veerg, laud, vastane);
 			case "ratsu" -> ratsu(nupp, rida, veerg, laud, vastane);
 			case "oda" -> diagonaal(nupp, rida, veerg, laud, vastane);
-			case "lip" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);
-			case "kuninga" -> kuningas(nupp, rida, veerg, laud, vastane);
+			case "lipp" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);
+			case "kuningas" -> kuningas(nupp, rida, veerg, laud, vastane);
 			default -> false;
 		};
 	}
@@ -127,7 +126,7 @@ public class KaiguKontroll {
 		}
 
 		if (nupp.kasPoleLiikunud()) {            // Lisab en passant lipu
-			nupp.setKasLiikunud(true);
+			nupp.setKasLiikunud(false);
 			nupp.setEnPassant(true);
 		}
 
@@ -143,8 +142,8 @@ public class KaiguKontroll {
 	 * @param laud    Mängulaud
 	 */
 	public static void kaotaNupp(Mangija vastane, int rida, int veerg, Nupp[][] laud) {
-		vastane.getNupud().remove(laud[rida][veerg]);        // Kustutab laualt
-		laud[rida][veerg] = null;                            // Kustutab vastase nuppude seast
+		vastane.getNupud().remove(laud[rida][veerg]);
+		laud[rida][veerg] = null;                            //	Kustutab laualt
 	}
 
 	/**
