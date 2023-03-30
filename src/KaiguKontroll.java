@@ -76,8 +76,8 @@ public class KaiguKontroll {
 			case "vanker" -> risti(nupp, rida, veerg, laud, vastane);
 			case "ratsu" -> ratsu(nupp, rida, veerg, laud, vastane);
 			case "oda" -> diagonaal(nupp, rida, veerg, laud, vastane);
-			case "lipp" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);
-			case "kuningas" -> kuningas(nupp, rida, veerg, laud, vastane);
+			case "lip" -> risti(nupp, rida, veerg, laud, vastane) || diagonaal(nupp, rida, veerg, laud, vastane);
+			case "kuninga" -> kuningas(nupp, rida, veerg, laud, vastane);
 			default -> false;
 		};
 	}
@@ -98,7 +98,7 @@ public class KaiguKontroll {
 			return true;
 
 		} else if (nupp.getVarv() != laud[rida][veerg].getVarv()) {    // Kui ruudul on vastase nupp
-			kaotaNupp(vastane, nupp.getAsukohtx(), veerg, laud);
+			kaotaNupp(vastane, rida, veerg, laud);
 			liigutaNuppu(nupp, rida, veerg, laud);
 			return true;
 		}
@@ -258,14 +258,14 @@ public class KaiguKontroll {
 	 * @return Kas käiku sai sooritada
 	 */
 	public static boolean ratsu(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {
-		int kontrollitavRida = nupp.getAsukohtx() + 2;        // Esimene ruut, mida kontrollitakse
-		int kontrollitavVeerg = nupp.getAsukohtx() + 1;
+		int kontrollitavRida = nupp.getAsukohtx() - 2;        // Esimene ruut, mida kontrollitakse
+		int kontrollitavVeerg = nupp.getAsukohty() + 1;
 		int veeruSuund = 1;                                    // Kontrollimis suund
 		int reaSuund = 1;
 
 		for (int i = 0; i < 8; i++) {                                // Kontrollib ratsu kõiki võimalike liikumiskohti
 			if (rida == kontrollitavRida && veerg == kontrollitavVeerg) {    // Ratsu liigub mööda rombi (välja arvatud tipud)
-				ruuduKontroll(nupp, rida, veerg, laud, vastane);
+				return ruuduKontroll(nupp, rida, veerg, laud, vastane);
 			}
 
 			kontrollitavRida += reaSuund;
@@ -304,31 +304,31 @@ public class KaiguKontroll {
 	 * @return Kas käiku sai sooritada
 	 */
 	public static boolean kuningas(Nupp nupp, int rida, int veerg, Nupp[][] laud, Mangija vastane) {
-		int kontrollitavRida = nupp.getAsukohtx() + 1;            // Esimene kontrollitav ruut
-		int kontrollitavVeerg = nupp.getAsukohtx() + 1;
+		int kontrollitavRida = nupp.getAsukohtx() - 1;            // Esimene kontrollitav ruut
+		int kontrollitavVeerg = nupp.getAsukohty() - 1;
 		int veeruSuund = 0;                                        // Kontrollimissuund
 		int reaSuund = 1;
 
-		for (int i = 0; i < 9; i++) {                                        // Kontrollib kõiki kuninga käike
+		for (int i = 0; i < 8; i++) {                                        // Kontrollib kõiki kuninga käike
 			if (rida == kontrollitavRida && veerg == kontrollitavVeerg) {        // Kuninga liikumine on ruut ehk kontrollitakse mööda ruutu
-				ruuduKontroll(nupp, rida, veerg, laud, vastane);
+				return ruuduKontroll(nupp, rida, veerg, laud, vastane);
 			}
 
 			kontrollitavRida += reaSuund;
 			kontrollitavVeerg += veeruSuund;
 
-			if (i == 2) {                    // Suuna muutus, kui kontrollitakse järgmist külge
-				veeruSuund = -1;
+			if (i == 1) {                    // Suuna muutus, kui kontrollitakse järgmist külge
+				veeruSuund = 1;
 				reaSuund = 0;
 			}
 
-			if (i == 4) {
+			if (i == 3) {
 				veeruSuund = 0;
 				reaSuund = -1;
 			}
 
-			if (i == 6) {
-				veeruSuund = 1;
+			if (i == 5) {
+				veeruSuund = -1;
 				reaSuund = 0;
 			}
 
@@ -369,7 +369,7 @@ public class KaiguKontroll {
 		if (nupp.getAsukohtx() == rida && nupp.getAsukohty() != veerg) {	// Kui liigutamine oli pikki rida
 			int suund = (veerg > nupp.getAsukohty()) ? 1 : -1;        		// Määrab liikumissuuna
 
-			for (int i = suund; i < Math.abs(veerg - nupp.getAsukohty()); i += suund) {  // Kontrollib, kas tee sihtkohta on vaba
+			for (int i = suund; Math.abs(i) < Math.abs(veerg - nupp.getAsukohty()); i += suund) {  // Kontrollib, kas tee sihtkohta on vaba
 				if (laud[rida][nupp.getAsukohty() + i] != null) {
 					return false;
 				}
@@ -382,7 +382,7 @@ public class KaiguKontroll {
 		if (nupp.getAsukohtx() != rida && nupp.getAsukohty() == veerg) { 	// Kui liigutamine oli pikki veergu
 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        		// Määrab liikumissuuna
 
-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) { 	// Kontrollib, kas tee sihtkohta on vaba
+			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) { 	// Kontrollib, kas tee sihtkohta on vaba
 				if (laud[nupp.getAsukohtx() + i][veerg] != null) {
 					return false;
 				}
@@ -408,7 +408,7 @@ public class KaiguKontroll {
 		if (nupp.getAsukohtx() - nupp.getAsukohty() == rida - veerg && nupp.getAsukohtx() != rida) {	// Kui liikumine oli pikki peadiagonaali
 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;        						// Määrab liikumissuuna
 
-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {     // Kontrollib, kas tee sihtkohta on vaba
+			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) {     // Kontrollib, kas tee sihtkohta on vaba
 				if (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() + i] != null) {
 					return false;
 				}
@@ -420,7 +420,7 @@ public class KaiguKontroll {
 		if (nupp.getAsukohtx() + nupp.getAsukohty() == rida + veerg && nupp.getAsukohtx() != rida) {    // Kui liikumine oli pikki kõrvaldiagonaali
 			int suund = (rida > nupp.getAsukohtx()) ? 1 : -1;       						// Määrab liikumissuuna
 
-			for (int i = suund; i < Math.abs(rida - nupp.getAsukohtx()); i += suund) {      // Kontrollib, kas tee sihtkohta on vaba
+			for (int i = suund; Math.abs(i) < Math.abs(rida - nupp.getAsukohtx()); i += suund) {      // Kontrollib, kas tee sihtkohta on vaba
 				if (laud[nupp.getAsukohtx() + i][nupp.getAsukohty() - i] != null) {
 					return false;
 				}
