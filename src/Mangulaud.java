@@ -85,10 +85,14 @@ public class Mangulaud {
 		System.out.println("Reeglid leiab leheküljelt https://brainking.com/ee/GameRules?tp=1\n");
 		System.out.println("""
 				Juhised mängimiseks:\s
+				
 				Liikumiseks tuleb kirjutada konsooli nupu nimetus ning tühikuga eraldada nimest käigu koht.\s
 				Tähised "m" ja "v" tähistavad värvi, kus m on must ning v on valge.\s
 				Käigu näited: (oda1 b6), (ettur5 c3), (kuningas1 a8)\s
-				Kui ettur jõuab mängulaua lõppu, siis tuleb väikeste tähtedega kirjutada mis nuppu soovitakse.""");
+				Kui ettur jõuab mängulaua lõppu, siis tuleb väikeste tähtedega kirjutada mis nuppu soovitakse.
+				
+				Kui mängija paneb vastase kuninga tule alla, siis peab ta sellest vastast teatama.
+				Viigiga lõppeb mäng ainult siis, kui mängijad selle ise kokkue lepivad.""");
 		System.out.println("\nEsimene mängija mängib värviga " + mängija1.getVarv() + " ning teine mängija mängib värviga " + mängija2.getVarv() + ".");
 	}
 }

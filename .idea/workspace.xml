@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Vigade parandus" />
+    <list default="true" id="52411c45-5dc5-40b0-ba5e-3b32e4c86193" name="Changes" comment="Vigade parandus">
+      <change beforePath="$PROJECT_DIR$/src/Mangulaud.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mangulaud.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680184299279</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Vigade parandus">
+      <created>1680184638214</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1680184638215</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
